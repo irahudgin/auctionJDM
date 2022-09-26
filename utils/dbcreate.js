@@ -1,5 +1,4 @@
 const sqlite3 = require("sqlite3").verbose();
-let sql;
 
 const db = new sqlite3.Database(
   "./auctionDB.db",
@@ -15,7 +14,7 @@ const db = new sqlite3.Database(
 // db.run(sql);
 
 // drop table
-db.run("DROP TABLE users");
+// db.run("DROP TABLE users");
 
 // insert data into database
 // sql = `INSERT INTO users(first_name,last_name,username,password,email) VALUES (?,?,?,?,?)`;
@@ -39,10 +38,12 @@ db.run("DROP TABLE users");
 //   }
 // });
 // query database
-sql = `SELECT * FROM users`;
-db.all(sql, [], (error, rows) => {
-  if (error) {
-    return console.error(error.message);
-  }
-  rows.forEach((row) => console.log(row));
-});
+// sql = `SELECT * FROM users`;
+// db.all(sql, [], (error, rows) => {
+//   if (error) {
+//     return console.error(error.message);
+//   }
+//   rows.forEach((row) => console.log(row));
+// });
+
+module.exports = { db };
