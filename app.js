@@ -16,13 +16,17 @@ app.set("view engine", "pug");
 
 // Home
 app.get("/", (req, res) => {
-  res.render("index");
+  res.render("login");
 });
 
 app.get("/auth", (req, res) => {
   res.redirect(
     `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}`
   );
+});
+
+app.get("/oauth-callback", (req, res) => {
+  res.render("index");
 });
 
 // Start server
