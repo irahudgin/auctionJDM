@@ -1,0 +1,11 @@
+extends layout 
+
+block content
+  form(class="registerform", method="POST", action="/register")
+    .form-group 
+      input(autocomplete="off", autofocus, class="form-control" name="username", placeholder="Username", type="text")
+    .form-group
+      input(class="form-control", name="password", placeholder="Password", type="password")
+    .form-group
+      input(class="form-control", name="confirmation", placeholder="Confirm Password", type="password")
+    button(class="registerbtn", type="submit") Register

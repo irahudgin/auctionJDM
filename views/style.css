@@ -18,3 +18,8 @@ body {
 .bodycontainer {
   margin-bottom: 50vh;
 }
+
+.registerform {
+  margin-top: 50px;
+  text-align: center;
+}
