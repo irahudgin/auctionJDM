@@ -7,8 +7,8 @@ const app = express();
 require("dotenv").config();
 const port = process.env.PORT || 5000;
 
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-// set static folder
 app.use(express.static(__dirname + "/views"));
 // pug setup
 app.set("views", path.join(__dirname, "views"));
@@ -35,7 +35,8 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  console.log(req.headers);
+  // req.headers["Content-Type"] = "application/json";
+  console.log(JSON.stringify(req.body));
 });
 
 // Start server
