@@ -32,11 +32,11 @@ app.get("/oauth-callback", (req, res) => {
 
 app.get("/register", (req, res) => {
   res.render("register");
-  res.setHeader("content-type", "application/json");
-  console.log(res.header);
 });
 
-app.post("/register", (req, res) => {});
+app.post("/register", (req, res) => {
+  console.log(req.headers);
+});
 
 // Start server
 app.listen(port, () => console.log(`server listening port ${port}`));
