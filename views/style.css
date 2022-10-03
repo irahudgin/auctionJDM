@@ -19,7 +19,23 @@ body {
   margin-bottom: 50vh;
 }
 
+.registercontainer {
+  display: flex;
+  justify-content: center;
+}
+
 .registerform {
-  margin-top: 50px;
+  display: flex;
+  margin: 30vh 0;
+  justify-content: center;
+  flex-direction: column;
+  width: 30vw;
+  align-items: center;
+}
+
+.loginbuttoncontainer {
+  display: flex;
+  flex-direction: column;
   text-align: center;
+  margin: 30vh 0;
 }

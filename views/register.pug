@@ -1,8 +1,9 @@
 extends layout 
 
 block content
-  form(class="registerform", method="POST", action="/register")
-      input(autocomplete="off", autofocus, class="form-control" name="username", placeholder="Username", type="text")
-      input(class="form-control", name="password", placeholder="Password", type="password")
-      input(class="form-control", name="confirmation", placeholder="Confirm Password", type="password")
-      button(class="registerbtn", type="submit") Register
+  .registercontainer
+    form(class="registerform", method="POST", action="/register")
+        input(autocomplete="off", autofocus, class="form-control" name="username", placeholder="Username", type="text")
+        input(class="form-control", name="password", placeholder="Password", type="password")
+        input(class="form-control", name="confirmation", placeholder="Confirm Password", type="password")
+        button(class="registerbtn", type="submit") Register
