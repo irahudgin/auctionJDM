@@ -1,10 +1,10 @@
 const Joi = require("joi");
 const path = require("path");
 const express = require("express");
-const db = require("./utils/dbcreate");
 const http = require("http");
 const app = express();
 const bcrypt = require("bcrypt");
+const sqlite3 = require("sqlite3").verbose();
 require("dotenv").config();
 const port = process.env.PORT || 5000;
 const auctionHelp = require("./utils/helpers");
@@ -59,33 +59,29 @@ app.post("/register", async (req, res) => {
     });
   }
 
-  // generate salt to hash password
-  const salt = await bcrypt.genSalt(10);
-  // now we set user password to hashed password
-  const passwordHash = await bcrypt.hash(password, salt);
-  // add a checkusr alreadry exists statement here later
-  const doubleUserCheck = db.db.all(
-    `SELECT username FROM users WHERE username=?`,
-    [username],
-    (err, row) => {
-      if (err) {
-        return console.error(err.message);
-      }
-      return row.username;
-    }
-  );
-  db.db.close;
-  console.log(doubleUserCheck);
-  if (doubleUserCheck === username) {
-    return res.render("apology", {
-      message: "Username already exists",
-      code: 400,
-    });
-  }
+  // compare username entered by client with database usernames to see if theres a match
   //
-  let sql = "INSERT INTO users(username, password) VALUES(?, ?)";
+  auctionHelp
+    .selectAll(`SELECT username FROM users WHERE username = ${username}`)
+    .then((user) => {
+      if (user[0].username === username) {
+        return res.render("apology", {
+          message: "Username already exists",
+          code: 400,
+        });
+      } else {
+        res.redirect("/");
+      }
+    });
+
+  // if a match exists return res.render(apology)
+
+  // generate salt to hash password
+  // const salt = await bcrypt.genSalt(10);
+  // now we set user password to hashed password
+  // const passwordHash = await bcrypt.hash(password, salt);
+  // add a checkusr alreadry exists statement here later
   // db.db.run(sql, [username, passwordHash]);
-  res.redirect("/");
 });
 
 // Start server

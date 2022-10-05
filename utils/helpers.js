@@ -1,25 +1,36 @@
 const sqlite3 = require("sqlite3").verbose();
 
-const db = new sqlite3.Database(
-  "./auctionDB.db",
-  sqlite3.OPEN_READWRITE,
-  (err) => {
-    if (err) return console.error(err.message);
-  }
-);
-
+// Returns object array of queried results.
 function selectAll(query) {
   return new Promise((resolve, reject) => {
-    let sql = query;
-    resolve(db.all(query, []));
+    // Prevent injection attacks
+    let queryCheck = query.substr(0, 4);
+    if (queryCheck == "DROP") {
+      reject("failed");
+    } else {
+      // Opens db
+      const db = new sqlite3.Database(
+        "./auctionDB.db",
+        sqlite3.OPEN_READWRITE,
+        (err) => {
+          if (err) return console.error(err.message);
+        }
+      );
+      let sql = query;
+      let rowData = [];
+      // Query db
+      let data = db.all(query, [], (err, rows) => {
+        if (err) {
+          throw err;
+        }
+        rows.forEach((row) => {
+          rowData.push(row);
+        });
+        resolve(rowData);
+        db.close();
+      });
+    }
   });
 }
-let sql = "SELECT * FROM users";
-console.log(
-  db.all(sql, [], (err, row) => {
-    if (err) {
-      console.error(err.message);
-    }
-    return row;
-  })
-);
+
+module.exports = { selectAll };
