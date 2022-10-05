@@ -26,11 +26,15 @@ function selectAll(query) {
         rows.forEach((row) => {
           rowData.push(row);
         });
-        resolve(rowData);
+        resolve(rowData); // suspect of the placement of the resolve here
         db.close();
       });
     }
   });
 }
+
+// selectAll('SELECT username FROM users WHERE username="bob"').then((user) => {
+//   console.log(user);
+// });
 
 module.exports = { selectAll };

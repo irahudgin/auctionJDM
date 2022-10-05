@@ -37,7 +37,7 @@ app.get("/register", (req, res) => {
   res.render("register");
 });
 
-app.post("/register", async (req, res) => {
+app.post("/register", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
   const confirmation = req.body.confirmation;
@@ -62,16 +62,20 @@ app.post("/register", async (req, res) => {
   // compare username entered by client with database usernames to see if theres a match
   //
   auctionHelp
-    .selectAll(`SELECT username FROM users WHERE username = ${username}`)
+    .selectAll(`SELECT username FROM users WHERE username="${username}"`)
     .then((user) => {
-      if (user[0].username === username) {
+      console.log(user);
+      if (!user[0]) {
+        return res.redirect("/");
+      } else if (user[0].username === username) {
         return res.render("apology", {
           message: "Username already exists",
           code: 400,
         });
-      } else {
-        res.redirect("/");
       }
+    })
+    .catch((error) => {
+      console.log(error);
     });
 
   // if a match exists return res.render(apology)
