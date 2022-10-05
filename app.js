@@ -37,12 +37,10 @@ app.get("/register", (req, res) => {
   res.render("register");
 });
 
-app.post("/register", (req, res) => {
-  console.log(req.body.username);
-  let saltRounds = 10;
-  let username = req.body.username;
-  let password = req.body.password;
-  let confirmation = req.body.confirmation;
+app.post("/register", async (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+  const confirmation = req.body.confirmation;
 
   if (username === "") {
     return res.render("apology", {
@@ -60,11 +58,33 @@ app.post("/register", (req, res) => {
       code: 400,
     });
   }
-  // else if (password == "") {
-  //   return apology("Must enter password");
-  // } else if (!(password === confirmation)) {
-  //   return apology("Passwords do not match");
-  // }
+
+  // generate salt to hash password
+  const salt = await bcrypt.genSalt(10);
+  // now we set user password to hashed password
+  const passwordHash = await bcrypt.hash(password, salt);
+  // add a checkusr alreadry exists statement here later
+  const doubleUserCheck = db.db.all(
+    `SELECT username FROM users WHERE username=?`,
+    [username],
+    (err, row) => {
+      if (err) {
+        return console.error(err.message);
+      }
+      return row.username;
+    }
+  );
+  db.db.close;
+  console.log(doubleUserCheck);
+  if (doubleUserCheck === username) {
+    return res.render("apology", {
+      message: "Username already exists",
+      code: 400,
+    });
+  }
+  //
+  let sql = "INSERT INTO users(username, password) VALUES(?, ?)";
+  // db.db.run(sql, [username, passwordHash]);
   res.redirect("/");
 });
 
