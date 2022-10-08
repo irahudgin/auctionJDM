@@ -64,15 +64,28 @@ app.post("/register", (req, res) => {
   auctionHelp
     .selectAll(`SELECT username FROM users WHERE username="${username}"`)
     .then((user) => {
-      console.log(user);
       if (!user[0]) {
-        return res.redirect("/");
+        return user;
       } else if (user[0].username === username) {
-        return res.render("apology", {
-          message: "Username already exists",
-          code: 400,
-        });
+        return Promise.reject(
+          res.render("apology", {
+            message: "Username already exists",
+            code: 400,
+          })
+        );
       }
+    })
+    .then(async () => {
+      //hash password
+      const salt = await bcrypt.genSalt(10);
+      const passwordHash = await bcrypt.hash(password, salt);
+      return passwordHash;
+    })
+    .then((passwordHash) => {
+      return auctionHelp.dbInsert(username, passwordHash);
+    })
+    .then((message) => {
+      console.log(message);
     })
     .catch((error) => {
       console.log(error);
@@ -81,9 +94,7 @@ app.post("/register", (req, res) => {
   // if a match exists return res.render(apology)
 
   // generate salt to hash password
-  // const salt = await bcrypt.genSalt(10);
   // now we set user password to hashed password
-  // const passwordHash = await bcrypt.hash(password, salt);
   // add a checkusr alreadry exists statement here later
   // db.db.run(sql, [username, passwordHash]);
 });
